@@ -21,21 +21,26 @@
     <body>
         <div id="mapid"></div>
         <script>
-            let map = L.map('mapid').setView([51.9194, 19.1451], 6);
+            let map = L.map('mapid');
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
 
-
-            <c:forEach var="location" items="${data.locations}">
-                if ([${location.newestNumberOfCases}] > 0) {
-                    L.marker([<c:out value="${location.latitude}"/>, <c:out value="${location.longitude}"/>]).addTo(map)
-                        .bindPopup("Country: <c:out value="${location.country_region}"/> </br>"
-                                    + "Cases: <c:out value="${location.newestNumberOfCases}"/> ")
+            <c:forEach var="point" items="${data.points}">
+                if ([${point.cases}] > 0) {
+                    L.marker([<c:out value="${point.latitude}"/>, <c:out value="${point.longitude}"/>]).addTo(map)
+                        .bindPopup("Country: <c:out value="${point.country_region}"/> </br>"
+                                    + "Cases: <c:out value="${point.cases}"/> ")
                         .openPopup();
                 }
             </c:forEach>
+
+            map.setView([52, 19], 6);
         </script>
     </body>
 </html>
+
+<script>
+
+</script>

@@ -4,27 +4,32 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Location {
-    public static final SimpleDateFormat dateFormat = new SimpleDateFormat("mm/dd/YYYY");
+    // == PUBLIC FIELDS ==
+    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("mm/dd/YYYY");
+
+    // == PRIVATE FIELDS ==
     private String province_state;
     private String country_region;
     private double latitude;
     private double longitude;
-    private Map<String, Integer> cases;
-    private int newestNumberOfCases;
+    private TreeMap<Calendar, Integer> cases;
 
+    // == CONSTRUCTORS ==
     public Location(String province_state, String country_region, double latitude, double longitude) {
         this.province_state = province_state;
         this.country_region = country_region;
         this.latitude = latitude;
         this.longitude = longitude;
-        cases = new LinkedHashMap<>();
+        cases = new TreeMap<>();
+
     }
 
     public Location() {
-        cases = new HashMap<>();
+        cases = new TreeMap<>();
     }
 
-    public void addNewDate(String date, int confirmedCases) {
+    // == PUBLIC METHODS ==
+    public void addNewDate(Calendar date, int confirmedCases) {
         cases.put(date, confirmedCases);
     }
 
@@ -44,10 +49,6 @@ public class Location {
         this.longitude = longitude;
     }
 
-    public void setNewestNumberOfCases(int newestNumberOfCases) {
-        this.newestNumberOfCases = newestNumberOfCases;
-    }
-
     public String getProvince_state() {
         return province_state;
     }
@@ -64,8 +65,18 @@ public class Location {
         return longitude;
     }
 
-    public int getNewestNumberOfCases() {
-        return newestNumberOfCases;
+    public int getActualNumberOfCases() {
+        return cases.lastEntry().getValue();
+    }
+
+    public Map<Calendar, Integer> getCases() {
+        return Collections.unmodifiableMap(cases);
+    }
+
+    // == METHOD FOR CREATING NEW POINT FROM LOCATION ==
+
+    public Point toPoint() {
+        return new Point(province_state, country_region, latitude, longitude, getActualNumberOfCases());
     }
 
     @Override
@@ -76,7 +87,6 @@ public class Location {
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
                 ", cases=" + cases +
-                ", newestNumberOfCases=" + newestNumberOfCases +
                 '}';
     }
 

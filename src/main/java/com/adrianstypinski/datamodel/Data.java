@@ -3,6 +3,7 @@ package com.adrianstypinski.datamodel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -11,28 +12,38 @@ import java.util.List;
 public class Data {
 
     private final List<Location> locations;
+    private final List<Point> points;
 
     public Data() {
         locations = LocationDAO.downloadData();
+        points = new ArrayList<>();
+        generatePoints();
     }
 
     public void updateData() {
-        List<Location> locations = LocationDAO.downloadData();
-        if (locations == null) {
+        List<Location> downloadData = LocationDAO.downloadData();
+        if (downloadData == null) {
             log.error("UNABLE TO DOWNLOAD NEW DATA!");
         } else {
             log.info("DATA DOWNLOADED");
             this.locations.clear();
-            this.locations.addAll(locations);
+            this.locations.addAll(downloadData);
+            generatePoints();
         }
     }
 
-    public void addLocation(Location location) {
+    private void generatePoints() {
+        if (!points.isEmpty()) {
+            points.clear();
+        }
 
+        if (!locations.isEmpty()) {
+            locations.forEach(location -> points.add(location.toPoint()));
+        }
     }
 
-    public void deleteLocation(Location location) {
-
+    public List<Point> getPoints() {
+        return Collections.unmodifiableList(points);
     }
 
     public List<Location> getLocations() {
