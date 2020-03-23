@@ -15,14 +15,41 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 
         <style>
+            body, html {
+                margin: 0;
+                padding: 0;
+                background: #3c3c3c;
+            }
+
             #mapid {
                 height: 80%;
+                width: 50%;
+            }
+
+            #top_box {
+                display: flex;
+            }
+
+            #top_menu {
+                width: 100%;
+                height: 65pt;
+            }
+
+            #chart_box {
+                position: relative;
+                height: 500px;
+                width: 500px;
             }
         </style>
     </head>
     <body>
-        <div id="mapid"></div>
-        <canvas id="myChart" height="100px" width="100px"></canvas>
+        <div id="top_menu"></div>
+        <div id="top_box">
+            <div id="mapid"></div>
+            <div id="chart_box">
+                <canvas id="myChart" height="500px" width="500px"></canvas>
+            </div>
+        </div>
         <script>
             <%--MAP SCRIPT--%>
 
