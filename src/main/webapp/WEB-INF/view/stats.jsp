@@ -12,6 +12,8 @@
                 integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
                 crossorigin=""></script>
 
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
         <style>
             #mapid {
                 height: 80%;
@@ -20,7 +22,10 @@
     </head>
     <body>
         <div id="mapid"></div>
+        <canvas id="myChart" height="100px" width="100px"></canvas>
         <script>
+            <%--MAP SCRIPT--%>
+
             let map = L.map('mapid');
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -37,6 +42,29 @@
             </c:forEach>
 
             map.setView([52, 19], 6);
+        </script>
+
+        <script>
+            <%--DATA-CHART SCRIPT--%>
+
+            let ctx = document.getElementById('myChart').getContext('2d');
+            let chart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'line',
+
+                // The data for our dataset
+                data: {
+                    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                    datasets: [{
+                        label: 'My First dataset',
+                        backgroundColor: 'rgb(255, 99, 132)',
+                        borderColor: 'rgb(255, 99, 132)',
+                        data: [0, 10, 5, 2, 20, 30, 45]
+                    }]
+                },
+
+                options: {}
+            });
         </script>
     </body>
 </html>
