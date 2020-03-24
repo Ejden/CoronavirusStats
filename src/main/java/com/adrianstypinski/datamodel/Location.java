@@ -1,5 +1,7 @@
 package com.adrianstypinski.datamodel;
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -69,7 +71,8 @@ public class Location {
         return cases.lastEntry().getValue();
     }
 
-    public Map<Calendar, Integer> getCases() {
+    @JsonAnyGetter
+    public Map<Calendar, Integer> getCasesHistory() {
         return Collections.unmodifiableMap(cases);
     }
 

@@ -1,18 +1,25 @@
 package com.adrianstypinski.datamodel;
 
+import com.adrianstypinski.util.ResponseParser;
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Component
 public class Data {
-
     private final List<Location> locations;
     private final List<Point> points;
+    private final ResponseParser responseParser;
 
-    public Data() {
+    @Autowired
+    public Data(ResponseParser responseParser) {
+        this.responseParser = responseParser;
         locations = LocationDAO.downloadData();
         points = new ArrayList<>();
         generatePoints();
@@ -40,35 +47,36 @@ public class Data {
         }
     }
 
-    public List<Point> getPoints() {
-        return Collections.unmodifiableList(points);
+    @JsonAnyGetter
+    public String getPoints() {
+        try {
+            return responseParser.getPoints(points);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
-    public List<Location> getLocations() {
-        return Collections.unmodifiableList(locations);
+    @JsonAnyGetter
+    public String getLocations() {
+        try {
+            return responseParser.getLocations(locations);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
-    public String[] getTitles() {
-        List<String> dates = new ArrayList<>();
-        Set<Calendar> calendars = locations.get(0).getCases().keySet();
-        calendars.forEach(calendar -> {
-            String date = calendar.get(Calendar.DAY_OF_MONTH) + "/"
-                    + Calendar.MONTH + "/"
-                    + Calendar.YEAR;
-            dates.add(date);
-        });
+    @JsonAnyGetter
+    public String getCasesHistory(int id) {
+        try {
+            return responseParser.getCasesHistory(locations.get(id).getCasesHistory());
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
 
-        String[] allDates = new String[dates.size()];
-        dates.toArray(allDates);
-        return allDates;
-    }
-
-    public Integer[] getData() {
-
-        Collection<Integer> cases = locations.get(0).getCases().values();
-        Integer[] values = new Integer[cases.size()];
-        cases.toArray(values);
-
-        return values;
+        return null;
     }
 }

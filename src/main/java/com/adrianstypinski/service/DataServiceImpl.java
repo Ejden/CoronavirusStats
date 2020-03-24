@@ -22,4 +22,19 @@ public class DataServiceImpl implements DataService {
     public Data getData() {
         return data;
     }
+
+    @Override
+    public String getPoints() {
+        return data.getPoints();
+    }
+
+    @Override
+    public String getLocations() {
+        return data.getLocations();
+    }
+
+    @Override
+    public String getCasesHistory(int id) {
+        return data.getCasesHistory(id);
+    }
 }
