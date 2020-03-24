@@ -38,8 +38,8 @@
 
             #chart_box {
                 position: relative;
-                height: 500px;
-                width: 500px;
+                height: 100%;
+                width: 50%;
                 float: right;
             }
         </style>
@@ -78,11 +78,20 @@
             let titles = [];
             <% String[] codes= (String[]) request.getAttribute("titles");
             if (codes !=null) {
-                for(int i=0; i<codes.length; i++) {
-            %>
-            var code = '<%= codes[i] %>';
-            titles[<%= i %>] = code;
-            <%}
+                for(int i=0; i<codes.length; i++) {%>
+                    var code = '<%= codes[i] %>';
+                    titles[<%= i %>] = code;
+                <%}
+            }%>
+
+
+            let values = [];
+            <% Integer[] tempArray = (Integer[]) request.getAttribute("values");
+            if (tempArray != null) {
+                for (int i = 0; i < tempArray.length; i++) {%>
+                    var value = <%= tempArray[i] %>;
+                    values[<%= i %>] = value;
+                <%}
             }%>
 
             let ctx = document.getElementById('myChart').getContext('2d');
@@ -94,14 +103,17 @@
                 data: {
                     labels: titles,
                     datasets: [{
-                        label: 'My First dataset',
+                        label: 'Finland',
                         backgroundColor: 'rgb(255, 99, 132)',
                         borderColor: 'rgb(255, 99, 132)',
-                        data: [0, 10, 5, 2, 20, 30, 45]
+                        data: values
                     }]
                 },
 
-                options: {}
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
             });
         </script>
     </body>

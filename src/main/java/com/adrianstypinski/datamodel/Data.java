@@ -62,4 +62,13 @@ public class Data {
         dates.toArray(allDates);
         return allDates;
     }
+
+    public Integer[] getData() {
+
+        Collection<Integer> cases = locations.get(0).getCases().values();
+        Integer[] values = new Integer[cases.size()];
+        cases.toArray(values);
+
+        return values;
+    }
 }

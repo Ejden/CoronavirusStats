@@ -29,6 +29,7 @@ public class StatsController {
     @GetMapping(Mappings.STATS)
     public String stats(Model model) {
         model.addAttribute("titles", dataService.getData().getTitles());
+        model.addAttribute("values", dataService.getData().getData());
         return ViewNames.STATS;
     }
 }
