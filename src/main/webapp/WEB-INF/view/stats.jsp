@@ -27,7 +27,6 @@
             }
 
             #top_box {
-                display: flex;
             }
 
             #top_menu {
@@ -52,7 +51,6 @@
         </div>
         <script>
             <%--MAP SCRIPT--%>
-
             let map = L.map('mapid');
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -74,6 +72,16 @@
         <script>
             <%--DATA-CHART SCRIPT--%>
 
+            let titles = [];
+            <% String[] codes= (String[]) request.getAttribute("titles");
+            if (codes !=null) {
+                for(int i=0; i<codes.length; i++) {
+            %>
+            var code = '<%= codes[i] %>';
+            titles[<%= i %>] = code;
+            <%}
+            }%>
+
             let ctx = document.getElementById('myChart').getContext('2d');
             let chart = new Chart(ctx, {
                 // The type of chart we want to create
@@ -81,7 +89,7 @@
 
                 // The data for our dataset
                 data: {
-                    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                    labels: titles,
                     datasets: [{
                         label: 'My First dataset',
                         backgroundColor: 'rgb(255, 99, 132)',
@@ -95,7 +103,3 @@
         </script>
     </body>
 </html>
-
-<script>
-
-</script>
