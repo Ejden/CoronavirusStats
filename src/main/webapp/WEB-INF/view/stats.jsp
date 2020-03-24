@@ -12,15 +12,48 @@
                 integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
                 crossorigin=""></script>
 
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
         <style>
+            body, html {
+                margin: 0;
+                padding: 0;
+            }
+
+            #top_menu {
+                width: 100%;
+                height: 65pt;
+            }
+
+            #top_box {
+                height: 80%;
+                width: 100%;
+            }
+
             #mapid {
                 height: 80%;
+                width: 50%;
+                float: left;
+            }
+
+            #chart_box {
+                position: relative;
+                height: 100%;
+                width: 50%;
+                float: right;
             }
         </style>
     </head>
     <body>
-        <div id="mapid"></div>
+        <div id="top_menu"></div>
+        <div id="top_box">
+            <div id="mapid"></div>
+            <div id="chart_box">
+                <canvas id="myChart" height="500px" width="500px"></canvas>
+            </div>
+        </div>
         <script>
+            <%--MAP SCRIPT--%>
             let map = L.map('mapid');
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -38,9 +71,50 @@
 
             map.setView([52, 19], 6);
         </script>
+
+        <script>
+            <%--DATA-CHART SCRIPT--%>
+
+            let titles = [];
+            <% String[] codes= (String[]) request.getAttribute("titles");
+            if (codes !=null) {
+                for(int i=0; i<codes.length; i++) {%>
+                    var code = '<%= codes[i] %>';
+                    titles[<%= i %>] = code;
+                <%}
+            }%>
+
+
+            let values = [];
+            <% Integer[] tempArray = (Integer[]) request.getAttribute("values");
+            if (tempArray != null) {
+                for (int i = 0; i < tempArray.length; i++) {%>
+                    var value = <%= tempArray[i] %>;
+                    values[<%= i %>] = value;
+                <%}
+            }%>
+
+            let ctx = document.getElementById('myChart').getContext('2d');
+            let chart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'line',
+
+                // The data for our dataset
+                data: {
+                    labels: titles,
+                    datasets: [{
+                        label: 'Finland',
+                        backgroundColor: 'rgb(255, 99, 132)',
+                        borderColor: 'rgb(255, 99, 132)',
+                        data: values
+                    }]
+                },
+
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        </script>
     </body>
 </html>
-
-<script>
-
-</script>
