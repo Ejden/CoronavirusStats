@@ -71,7 +71,11 @@ public class LocationDAO {
 
                 @SuppressWarnings("MagicConstant")
                 Calendar cal = new GregorianCalendar(year, month-1, day);
-                location.addNewDate(cal, Integer.parseInt(record.get(i)));
+                int cases = 0;
+                try {
+                    cases = Integer.parseInt(record.get(i));
+                } catch (NumberFormatException ignored) {}
+                    location.addNewDate(cal, cases);
             }
 
             locations.add(location);
