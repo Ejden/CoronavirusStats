@@ -18,15 +18,6 @@
             body, html {
                 margin: 0;
                 padding: 0;
-                background: #3c3c3c;
-            }
-
-            #mapid {
-                height: 80%;
-                width: 50%;
-            }
-
-            #top_box {
             }
 
             #top_menu {
@@ -34,10 +25,22 @@
                 height: 65pt;
             }
 
+            #top_box {
+                height: 80%;
+                width: 100%;
+            }
+
+            #mapid {
+                height: 80%;
+                width: 50%;
+                float: left;
+            }
+
             #chart_box {
                 position: relative;
                 height: 500px;
                 width: 500px;
+                float: right;
             }
         </style>
     </head>
