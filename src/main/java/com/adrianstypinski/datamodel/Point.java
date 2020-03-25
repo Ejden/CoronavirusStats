@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Point {
+    private int id;
     private String province_state;
     private String country_region;
     private double latitude;

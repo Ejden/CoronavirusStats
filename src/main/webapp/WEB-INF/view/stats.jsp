@@ -14,6 +14,10 @@
 
         <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
         <style>
             body, html {
                 margin: 0;
@@ -60,39 +64,37 @@
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
 
-            <c:forEach var="point" items="${data.points}">
-                if ([${point.cases}] > 0) {
-                    L.marker([<c:out value="${point.latitude}"/>, <c:out value="${point.longitude}"/>]).addTo(map)
-                        .bindPopup("Country: <c:out value="${point.country_region}"/> </br>"
-                                    + "Cases: <c:out value="${point.cases}"/> ")
+
+            const instance = axios.create({
+                baseURL: 'http://localhost:8080/CoronavirusStats/api',
+                timeout: 1000
+            });
+
+            let data = instance.get('/points?onlyWithActiveCases=true').then(function (response) {
+                for (let i = 0; i < response.data.length; i++) {
+                    L.marker([response.data[i].latitude, response.data[i].longitude])
+                        .addTo(map)
+                        .bindPopup('Province/State: ' + response.data[i].province_state + '</br>'
+                                    + 'Country/Region: ' + response.data[i].province_state + '</br>'
+                                    + 'Cases: ' + response.data[i].cases)
                         .openPopup();
                 }
-            </c:forEach>
+            });
 
             map.setView([52, 19], 6);
+
         </script>
 
         <script>
             <%--DATA-CHART SCRIPT--%>
 
-            let titles = [];
-            <% String[] codes= (String[]) request.getAttribute("titles");
-            if (codes !=null) {
-                for(int i=0; i<codes.length; i++) {%>
-                    var code = '<%= codes[i] %>';
-                    titles[<%= i %>] = code;
-                <%}
-            }%>
+
+            let titles = ['pipa', 'siusiak'];
 
 
-            let values = [];
-            <% Integer[] tempArray = (Integer[]) request.getAttribute("values");
-            if (tempArray != null) {
-                for (int i = 0; i < tempArray.length; i++) {%>
-                    var value = <%= tempArray[i] %>;
-                    values[<%= i %>] = value;
-                <%}
-            }%>
+
+            let values = [0, 20];
+
 
             let ctx = document.getElementById('myChart').getContext('2d');
             let chart = new Chart(ctx, {
@@ -112,7 +114,7 @@
 
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false
+                    maintainAspectRatio: false,
                 }
             });
         </script>

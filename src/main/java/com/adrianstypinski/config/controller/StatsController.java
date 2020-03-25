@@ -7,9 +7,10 @@ import com.adrianstypinski.util.ViewNames;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Slf4j
 @Controller
@@ -27,9 +28,26 @@ public class StatsController {
     }
 
     @GetMapping(Mappings.STATS)
-    public String stats(Model model) {
-        model.addAttribute("titles", dataService.getData().getTitles());
-        model.addAttribute("values", dataService.getData().getData());
+    public String stats() {
         return ViewNames.STATS;
+    }
+
+    //JSON
+    @ResponseBody
+    @GetMapping("api/"+Mappings.POINTS)
+    public String points(@RequestParam(required = false, defaultValue = "false") boolean onlyWithActiveCases) {
+        return dataService.getPoints(onlyWithActiveCases);
+    }
+
+    @ResponseBody
+    @GetMapping("api/"+Mappings.LOCATIONS)
+    public String locations() {
+        return dataService.getLocations();
+    }
+
+    @ResponseBody
+    @GetMapping("api/"+Mappings.CASES_HISTORY)
+    public String casesHistory(@RequestParam int id) {
+        return dataService.getCasesHistory(id);
     }
 }

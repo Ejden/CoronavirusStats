@@ -1,6 +1,7 @@
 package com.adrianstypinski.datamodel;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -8,10 +9,10 @@ import java.util.*;
 @Slf4j
 @Component
 public class Data {
-
     private final List<Location> locations;
     private final List<Point> points;
 
+    @Autowired
     public Data() {
         locations = LocationDAO.downloadData();
         points = new ArrayList<>();
@@ -48,27 +49,7 @@ public class Data {
         return Collections.unmodifiableList(locations);
     }
 
-    public String[] getTitles() {
-        List<String> dates = new ArrayList<>();
-        Set<Calendar> calendars = locations.get(0).getCases().keySet();
-        calendars.forEach(calendar -> {
-            String date = calendar.get(Calendar.DAY_OF_MONTH) + "/"
-                    + Calendar.MONTH + "/"
-                    + Calendar.YEAR;
-            dates.add(date);
-        });
-
-        String[] allDates = new String[dates.size()];
-        dates.toArray(allDates);
-        return allDates;
-    }
-
-    public Integer[] getData() {
-
-        Collection<Integer> cases = locations.get(0).getCases().values();
-        Integer[] values = new Integer[cases.size()];
-        cases.toArray(values);
-
-        return values;
+    public Map<Calendar, Integer> getCasesHistory(int id) {
+        return Collections.unmodifiableMap(locations.get(id).getCases());
     }
 }

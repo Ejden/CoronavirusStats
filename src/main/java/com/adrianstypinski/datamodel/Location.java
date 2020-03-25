@@ -1,13 +1,18 @@
 package com.adrianstypinski.datamodel;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class Location {
     // == PUBLIC FIELDS ==
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("mm/dd/YYYY");
+    private static int idValue = 0;
 
     // == PRIVATE FIELDS ==
+    private int id;
     private String province_state;
     private String country_region;
     private double latitude;
@@ -16,6 +21,7 @@ public class Location {
 
     // == CONSTRUCTORS ==
     public Location(String province_state, String country_region, double latitude, double longitude) {
+        this.id = idValue++;
         this.province_state = province_state;
         this.country_region = country_region;
         this.latitude = latitude;
@@ -24,29 +30,8 @@ public class Location {
 
     }
 
-    public Location() {
-        cases = new TreeMap<>();
-    }
-
-    // == PUBLIC METHODS ==
-    public void addNewDate(Calendar date, int confirmedCases) {
-        cases.put(date, confirmedCases);
-    }
-
-    public void setProvince_state(String province_state) {
-        this.province_state = province_state;
-    }
-
-    public void setCountry_region(String country_region) {
-        this.country_region = country_region;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
+    public int getId() {
+        return id;
     }
 
     public String getProvince_state() {
@@ -65,24 +50,34 @@ public class Location {
         return longitude;
     }
 
+    public TreeMap<Calendar, Integer> getCases() {
+        return cases;
+    }
+
+    // == PUBLIC METHODS ==
+    public void addNewDate(Calendar date, int confirmedCases) {
+        cases.put(date, confirmedCases);
+    }
+
     public int getActualNumberOfCases() {
         return cases.lastEntry().getValue();
     }
 
-    public Map<Calendar, Integer> getCases() {
+    public Map<Calendar, Integer> getCasesHistory() {
         return Collections.unmodifiableMap(cases);
     }
 
     // == METHOD FOR CREATING NEW POINT FROM LOCATION ==
 
     public Point toPoint() {
-        return new Point(province_state, country_region, latitude, longitude, getActualNumberOfCases());
+        return new Point(id, province_state, country_region, latitude, longitude, getActualNumberOfCases());
     }
 
     @Override
     public String toString() {
         return "Location{" +
-                "province_state='" + province_state + '\'' +
+                "id=" + id +
+                ", province_state='" + province_state + '\'' +
                 ", country_region='" + country_region + '\'' +
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
@@ -97,15 +92,11 @@ public class Location {
 
         Location location = (Location) o;
 
-        if (!Objects.equals(province_state, location.province_state))
-            return false;
-        return country_region.equals(location.country_region);
+        return id == location.id;
     }
 
     @Override
     public int hashCode() {
-        int result = province_state != null ? province_state.hashCode() : 0;
-        result = 31 * result + country_region.hashCode();
-        return result;
+        return id;
     }
 }
