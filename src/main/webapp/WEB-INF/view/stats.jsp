@@ -89,7 +89,7 @@
             <%--DATA-CHART SCRIPT--%>
 
 
-            let titles = ['pipa', 'siusiak'];
+            let titles = [];
 
 
 
