@@ -34,19 +34,19 @@ public class StatsController {
 
     //JSON
     @ResponseBody
-    @GetMapping(Mappings.POINTS)
-    public String points() {
-        return dataService.getPoints();
+    @GetMapping("api/"+Mappings.POINTS)
+    public String points(@RequestParam(required = false, defaultValue = "false") boolean onlyWithActiveCases) {
+        return dataService.getPoints(onlyWithActiveCases);
     }
 
     @ResponseBody
-    @GetMapping(Mappings.LOCATIONS)
+    @GetMapping("api/"+Mappings.LOCATIONS)
     public String locations() {
         return dataService.getLocations();
     }
 
     @ResponseBody
-    @GetMapping(Mappings.CASES_HISTORY)
+    @GetMapping("api/"+Mappings.CASES_HISTORY)
     public String casesHistory(@RequestParam int id) {
         return dataService.getCasesHistory(id);
     }

@@ -7,7 +7,7 @@ public interface DataService {
 
     Data getData();
 
-    String getPoints();
+    String getPoints(boolean param1);
 
     String getLocations();
 

@@ -1,25 +1,19 @@
 package com.adrianstypinski.datamodel;
 
-import com.adrianstypinski.util.ResponseParser;
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @Component
 public class Data {
     private final List<Location> locations;
     private final List<Point> points;
-    private final ResponseParser responseParser;
 
     @Autowired
-    public Data(ResponseParser responseParser) {
-        this.responseParser = responseParser;
+    public Data() {
         locations = LocationDAO.downloadData();
         points = new ArrayList<>();
         generatePoints();
@@ -47,36 +41,15 @@ public class Data {
         }
     }
 
-    @JsonAnyGetter
-    public String getPoints() {
-        try {
-            return responseParser.getPoints(points);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-
-        return null;
+    public List<Point> getPoints() {
+        return Collections.unmodifiableList(points);
     }
 
-    @JsonAnyGetter
-    public String getLocations() {
-        try {
-            return responseParser.getLocations(locations);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-
-        return null;
+    public List<Location> getLocations() {
+        return Collections.unmodifiableList(locations);
     }
 
-    @JsonAnyGetter
-    public String getCasesHistory(int id) {
-        try {
-            return responseParser.getCasesHistory(locations.get(id).getCasesHistory());
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-
-        return null;
+    public Map<Calendar, Integer> getCasesHistory(int id) {
+        return Collections.unmodifiableMap(locations.get(id).getCases());
     }
 }
