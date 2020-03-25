@@ -47,6 +47,12 @@
                 float: right;
             }
         </style>
+        <script>
+            const instance = axios.create({
+                baseURL: 'http://localhost:8080/CoronavirusStats/api',
+                timeout: 1000
+            });
+        </script>
     </head>
     <body>
         <div id="top_menu"></div>
@@ -57,6 +63,39 @@
             </div>
         </div>
         <script>
+            <%--DATA-CHART SCRIPT--%>
+            let ctx = document.getElementById('myChart').getContext('2d');
+            // == CHART DATA ==
+            let country = 'No country selected';
+            let titles = [];
+            let values = [1,1];
+
+            // == CONSTANTS ==
+            let CHART_TYPE = 'line';
+            let CHART_OPTIONS = {
+                responsive: true,
+                maintainAspectRatio: false
+            };
+            let CHART_DATA = {
+                labels: titles,
+                datasets: [{
+                    label: country,
+                    backgroundColor: 'rgb(255, 99, 132)',
+                    borderColor: 'rgb(255, 99, 132)',
+                    data: values
+                }]
+            };
+
+            let chart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: CHART_TYPE,
+                // The data for our dataset
+                data: CHART_DATA,
+                // Options for chart
+                options: CHART_OPTIONS
+            });
+        </script>
+        <script>
             <%--MAP SCRIPT--%>
             let map = L.map('mapid');
 
@@ -64,58 +103,38 @@
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
 
-
-            const instance = axios.create({
-                baseURL: 'http://localhost:8080/CoronavirusStats/api',
-                timeout: 1000
-            });
-
-            let data = instance.get('/points?onlyWithActiveCases=true').then(function (response) {
+            let data = instance.get('/points?onlyWithActiveCases=true').then(response => {
                 for (let i = 0; i < response.data.length; i++) {
+                    //content
+                    let content;
+                    if (response.data[i].province_state != null) {
+                        content = 'Province: ' + response.data[i].province_state + '</br>';
+                    }
+                    content = 'Country: ' + response.data[i].country_region + '</br>'
+                        + 'Cases: ' + response.data[i].cases;
+
+                    //marker
                     L.marker([response.data[i].latitude, response.data[i].longitude])
                         .addTo(map)
-                        .bindPopup('Province/State: ' + response.data[i].province_state + '</br>'
-                                    + 'Country/Region: ' + response.data[i].province_state + '</br>'
-                                    + 'Cases: ' + response.data[i].cases)
-                        .openPopup();
+                        .bindPopup(content)
+                        .openPopup()
+                        .on('click', function () {
+                            instance.get('/casesHistory?id='+response.data[i].id).then(response2 => {
+                                country = response.data[i].country_region;
+                                values = Array.from(Object.values(response2.data));
+
+                                chart = new Chart(ctx, {
+                                    // The type of chart we want to create
+                                    type: CHART_TYPE,
+                                    // The data for our dataset
+                                    data: CHART_DATA,
+                                    // Options for chart
+                                    options: CHART_OPTIONS
+                                })
+                            })
+                        })
                 }
-            });
-
-            map.setView([52, 19], 6);
-
-        </script>
-
-        <script>
-            <%--DATA-CHART SCRIPT--%>
-
-
-            let titles = [];
-
-
-
-            let values = [0, 20];
-
-
-            let ctx = document.getElementById('myChart').getContext('2d');
-            let chart = new Chart(ctx, {
-                // The type of chart we want to create
-                type: 'line',
-
-                // The data for our dataset
-                data: {
-                    labels: titles,
-                    datasets: [{
-                        label: 'Finland',
-                        backgroundColor: 'rgb(255, 99, 132)',
-                        borderColor: 'rgb(255, 99, 132)',
-                        data: values
-                    }]
-                },
-
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                }
+                map.setView([52, 19], 6);
             });
         </script>
     </body>

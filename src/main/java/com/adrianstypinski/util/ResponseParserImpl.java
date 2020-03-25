@@ -31,7 +31,7 @@ public class ResponseParserImpl implements ResponseParser {
 
         for (Map.Entry<Calendar, Integer> entry : s.entrySet()) {
             String date = entry.getKey().get(Calendar.DAY_OF_MONTH) + "/"
-                    + entry.getKey().get(Calendar.MONTH) + "/"
+                    + (entry.getKey().get(Calendar.MONTH)+1) + "/"
                     + entry.getKey().get(Calendar.YEAR);
 
             output.put(date, entry.getValue());
