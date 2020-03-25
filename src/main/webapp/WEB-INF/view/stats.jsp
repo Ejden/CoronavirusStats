@@ -121,13 +121,22 @@
                         .on('click', function () {
                             instance.get('/casesHistory?id='+response.data[i].id).then(response2 => {
                                 country = response.data[i].country_region;
+                                titles = Array.from(Object.keys(response2.data));
                                 values = Array.from(Object.values(response2.data));
 
                                 chart = new Chart(ctx, {
                                     // The type of chart we want to create
                                     type: CHART_TYPE,
                                     // The data for our dataset
-                                    data: CHART_DATA,
+                                    data: {
+                                        label: titles,
+                                        datasets: [{
+                                            label: response2.data,
+                                            backgroundColor: 'rgb(255, 99, 132)',
+                                            borderColor: 'rgb(255, 99, 132)',
+                                            data: values
+                                        }]
+                                    },
                                     // Options for chart
                                     options: CHART_OPTIONS
                                 })
