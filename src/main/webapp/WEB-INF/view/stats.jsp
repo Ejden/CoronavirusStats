@@ -129,7 +129,7 @@
                                     type: CHART_TYPE,
                                     // The data for our dataset
                                     data: {
-                                        label: titles,
+                                        labels: titles,
                                         datasets: [{
                                             label: response2.data,
                                             backgroundColor: 'rgb(255, 99, 132)',
