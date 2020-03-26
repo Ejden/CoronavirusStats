@@ -18,7 +18,7 @@
 
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
-        <style>
+        <style type="text/css">
             body, html {
                 margin: 0;
                 padding: 0;
@@ -49,7 +49,7 @@
         </style>
         <script>
             const instance = axios.create({
-                baseURL: 'https://coronavirus-stats-by-adrian.herokuapp.com/api',
+                baseURL: 'http://localhost:8080/CoronavirusStats/api',
                 timeout: 1000
             });
         </script>
@@ -106,11 +106,11 @@
             let data = instance.get('/points?onlyWithActiveCases=true').then(response => {
                 for (let i = 0; i < response.data.length; i++) {
                     //content
-                    let content;
-                    if (response.data[i].province_state != null) {
+                    let content = '';
+                    if (response.data[i].province_state !== '') {
                         content = 'Province: ' + response.data[i].province_state + '</br>';
                     }
-                    content = 'Country: ' + response.data[i].country_region + '</br>'
+                    content += 'Country: ' + response.data[i].country_region + '</br>'
                         + 'Cases: ' + response.data[i].cases;
 
                     //marker
