@@ -49,7 +49,7 @@
         </style>
         <script>
             const instance = axios.create({
-                baseURL: 'http://localhost:8080/CoronavirusStats/api',
+                baseURL: 'https://coronavirus-stats-by-adrian.herokuapp.com/api',
                 timeout: 1000
             });
         </script>
