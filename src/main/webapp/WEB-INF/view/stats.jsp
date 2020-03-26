@@ -49,7 +49,7 @@
         </style>
         <script>
             const instance = axios.create({
-                baseURL: 'http://coronavirus-stats-by-adrian.herokuapp.com/CoronavirusStats/api',
+                baseURL: 'http://coronavirus-stats-by-adrian.herokuapp.com/api',
                 timeout: 1000
             });
         </script>
